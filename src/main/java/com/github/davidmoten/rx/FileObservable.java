@@ -171,6 +171,18 @@ public final class FileObservable {
     public final static Observable<WatchEvent<?>> from(final File file, Kind<?>... kinds) {
         return from(file, null, kinds);
     }
+    
+    @SafeVarargs
+    public final static <T> Observable<WatchEvent<T>> events(final File file, Kind<T>... kinds) {
+        return from(file, null, kinds)
+                .map(new Func1<WatchEvent<?>, WatchEvent<T>>() {
+                    @SuppressWarnings("unchecked")
+                    @Override
+                    public WatchEvent<T> call(WatchEvent<?> event) {
+                        return (WatchEvent<T>) event;
+                    }
+                });
+    }
 
     /**
      * If file does not exist at subscribe time then is assumed to not be a
